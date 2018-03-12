@@ -1,6 +1,6 @@
 import React from 'react';
 import { ListView, StyleSheet, View } from 'react-native';
-import { Body, Title, Right, Container, Header, Content, Button, Icon, List, ListItem, Text } from 'native-base';
+import { Body, Title, Right, Container, Header, Content, Footer, FooterTab, Button, Icon, List, ListItem, Text, Thumbnail } from 'native-base';
 
 export default class App extends React.Component {
   constructor() {
@@ -12,7 +12,7 @@ export default class App extends React.Component {
   }
 
   // Retrieve the list of ideas from Airtable
-  getIdeas() {
+  getItems() {
     // Airtable API endpoint, replace with your own
     let airtableUrl = "https://api.airtable.com/v0/appkuqJQ1ttYDrdcV/data/";
 
@@ -36,7 +36,7 @@ export default class App extends React.Component {
 
   // Runs when the application loads (i.e. the "App" component "mounts")
   componentDidMount() {
-    this.getIdeas(); // refresh the list when we're done
+    this.getItems(); // refresh the list when we're done
   }
 
   // Upvote an idea
@@ -66,7 +66,7 @@ export default class App extends React.Component {
 
     // Make the request
     fetch(request).then(response => response.json()).then(json => {
-      this.getIdeas(); // refresh the list when we're done
+      this.getItems(); // refresh the list when we're done
     });
   }
 
@@ -97,7 +97,7 @@ export default class App extends React.Component {
 
     // Make the request
     fetch(request).then(response => response.json()).then(json => {
-      this.getIdeas(); // refresh the list when we're done
+      this.getItems(); // refresh the list when we're done
     });
   }
 
@@ -106,12 +106,13 @@ export default class App extends React.Component {
   renderRow(data) {
     return (
       <ListItem style={{ paddingLeft: 20, paddingRight: 20 }}>
+        <Thumbnail square size={80} source={{uri: data.fields.itemUrl}} />
         <Body>
           <Text>{data.fields.item}</Text>
         </Body>
-        <Right>
+          <Right>
           <Text note>QTY {data.fields.itemCount}</Text>
-        </Right>
+          </Right>
       </ListItem>
     )
   }
@@ -120,7 +121,7 @@ export default class App extends React.Component {
   renderSwipeRight(data, secId, rowId, rowMap) {
     return (
       <Button full success onPress={() => this.upvoteIdea(data, secId, rowId, rowMap)}>
-        <Icon active name="thumbs-up" />
+        <Icon active name="add-circle" />
       </Button>
     )
   }
@@ -129,7 +130,7 @@ export default class App extends React.Component {
   renderSwipeLeft(data, secId, rowId, rowMap) {
     return (
       <Button full danger onPress={() => this.downvoteIdea(data, secId, rowId, rowMap)}>
-        <Icon active name="thumbs-down" />
+        <Icon active name="remove-circle" />
       </Button>
     )
   }
@@ -140,7 +141,7 @@ export default class App extends React.Component {
       <Container>
         <Header>
           <Body>
-            <Title>Stinder</Title>
+            <Title>TabCaptain Restaurant Ordering System</Title>
           </Body>
         </Header>
         <Content>
@@ -152,7 +153,23 @@ export default class App extends React.Component {
             leftOpenValue={75}
             rightOpenValue={-75}
           />
-        </Content>
+          </Content>
+          <Footer>
+            <FooterTab>
+              <Button vertical active>
+                <Icon name="pizza" />
+                  <Text>Food</Text>
+              </Button>
+              <Button vertical>
+                <Icon name="beer" />
+                  <Text>Drink</Text>
+              </Button>
+              <Button vertical>
+                <Icon name="cart" />
+                  <Text>Close Tab</Text>
+              </Button>
+            </FooterTab>
+          </Footer>
       </Container>
     );
   }
